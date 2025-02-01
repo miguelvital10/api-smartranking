@@ -14,6 +14,10 @@ export class JogadoresService {
         await this.criar(criaJogadorDto)
     }
 
+    async consultarTodosJogadores(): Promise<Jogador[]>{
+        return await this.jogadores
+    }
+
     private criar(criaJogadorDto: CriarJogadorDto): void {
         const { nome, email, telefoneCelular} = criaJogadorDto
 
@@ -29,9 +33,7 @@ export class JogadoresService {
 
         this.logger.log(`criaJogadorDto: ${JSON.stringify(jogador)}`)
 
-
         this.jogadores.push(jogador)
-
-
     }
+
 }
