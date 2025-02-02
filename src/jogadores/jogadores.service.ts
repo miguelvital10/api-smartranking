@@ -13,7 +13,7 @@ export class JogadoresService {
     async criarAtualizarJogador(criaJogadorDto: CriarJogadorDto): Promise<void> {
 
         const { email } = criaJogadorDto
-        const jogadorEncontrado = await this.jogadores.find(jogador => jogador.email === email)
+        const jogadorEncontrado = this.jogadores.find(jogador => jogador.email === email)
 
         if (jogadorEncontrado) {
             await this.atualizar(jogadorEncontrado, criaJogadorDto)
@@ -28,13 +28,18 @@ export class JogadoresService {
     }
 
     async consultarJogadoresByEmail(email: string): Promise<Jogador> {
-        const jogadorEncontrado = await this.jogadores.find(jogador => jogador.email === email)
+        const jogadorEncontrado = this.jogadores.find(jogador => jogador.email === email)
 
         if (!jogadorEncontrado) {
             throw new NotFoundException(`Jogador com email ${email} não encontrado`)
         }
         
         return jogadorEncontrado
+    }
+
+    async deletarJogador(email: string): Promise<void> {
+        const jogadorEncontrado = this.jogadores.find(jogador => jogador.email === email)
+        this.jogadores = this.jogadores.filter(jogador => jogador.email !== jogadorEncontrado.email)
     }
 
     private criar(criaJogadorDto: CriarJogadorDto): void {
