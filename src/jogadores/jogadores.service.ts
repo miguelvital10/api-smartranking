@@ -17,7 +17,10 @@ export class JogadoresService {
     async criarAtualizarJogador(criaJogadorDto: CriarJogadorDto): Promise<void> {
 
         const { email } = criaJogadorDto
-        const jogadorEncontrado = this.jogadores.find(jogador => jogador.email === email)
+        // const jogadorEncontrado = this.jogadores.find(jogador => jogador.email === email)
+
+        const jogadorEncontrado = this.jogadorModel.findOne([email]).exec();
+
 
         if (jogadorEncontrado) {
             await this.atualizar(jogadorEncontrado, criaJogadorDto)
@@ -46,22 +49,11 @@ export class JogadoresService {
         this.jogadores = this.jogadores.filter(jogador => jogador.email !== jogadorEncontrado.email)
     }
 
-    private criar(criaJogadorDto: CriarJogadorDto): void {
-        const { nome, email, telefoneCelular} = criaJogadorDto
+    private async criar(criaJogadorDto: CriarJogadorDto): Promise<Jogador> {
 
-        const jogador: Jogador = {
-            _id: uuidv4(),
-            nome,
-            telefoneCelular,
-            email,
-            ranking: 'A',
-            posicaoRanking: 1,
-            urlFotoJogador: 'www.google.com.br/foto123.jpg'
-        }
-
-        this.logger.log(`criaJogadorDto: ${JSON.stringify(jogador)}`)
-
-        this.jogadores.push(jogador)
+        const jogadorCriado = new this.jogadorModel(criaJogadorDto)
+        return await jogadorCriado.save()
+        
     }
 
     private atualizar(jogadorEncontrado: Jogador, criaJogadorDto: CriarJogadorDto): void {
