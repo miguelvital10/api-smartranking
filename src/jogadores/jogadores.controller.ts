@@ -35,8 +35,8 @@ export class JogadoresController {
       return await this.JogadoresService.consultarJogadorPeloId(_id)
   }
 
-  @Delete()
-  async deletarJogador(@Query('email', JogdoresValiacaoParametrosPipe) email: string): Promise<void> {
-    await this.JogadoresService.deletarJogador(email)
+  @Delete('/:_id')
+  async deletarJogador(@Param('_id', JogdoresValiacaoParametrosPipe) _id: string): Promise<void> {
+    await this.JogadoresService.deletarJogador(_id)
   }
 }
