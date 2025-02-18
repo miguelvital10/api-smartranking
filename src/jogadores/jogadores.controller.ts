@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Query, Delete, UsePipes, ValidationPipe, Param, Put } from '@nestjs/common';
+import { Body, Controller, Post, Get, Delete, UsePipes, ValidationPipe, Param, Put } from '@nestjs/common';
 import { CriarJogadorDto } from './dtos/criarJogador.dto';
 import { JogadoresService } from './jogadores.service';
 import { Jogador } from './jogador/jogador.interface';
@@ -12,8 +12,8 @@ export class JogadoresController {
   @Post()
   @UsePipes(ValidationPipe)
   async criarJogador(   
-    @Body() criaJogadorDto: CriarJogadorDto) {
-      await this.JogadoresService.criarJogador(criaJogadorDto)
+    @Body() criaJogadorDto: CriarJogadorDto): Promise<Jogador> {
+      return await this.JogadoresService.criarJogador(criaJogadorDto)
     }
 
   @Put('/:_id')
@@ -21,7 +21,7 @@ export class JogadoresController {
   async atualizarJogador(
     @Body() criaJogadorDto: CriarJogadorDto,
     @Param('_id', JogdoresValiacaoParametrosPipe) _id: string): Promise<void> {
-      await this.JogadoresService.atualizarJogador(criaJogadorDto, _id)
+      await this.JogadoresService.atualizarJogador(_id, criaJogadorDto,)
     }
 
   @Get()

@@ -53,8 +53,15 @@ export class JogadoresService {
         return jogadorEncontrado
     }
 
-    async deletarJogador(email: string): Promise<any> {
-        return await this.jogadorModel.deleteOne({ email }).exec()
+    async deletarJogador(_id: string): Promise<any> {
+        const jogadorEncontrado = await this.jogadorModel.findOne({_id}).exec()
+
+        if (!jogadorEncontrado) {
+            throw new NotFoundException(`Jogador com id ${_id} não encontrado`)
+        }
+        
+
+        return await this.jogadorModel.deleteOne({ _id }).exec()
     }
 
     private async atualizar(criarJogadorDto: CriarJogadorDto): Promise<Jogador> {
@@ -62,5 +69,6 @@ export class JogadoresService {
             {$set: criarJogadorDto}).exec()
     
     }
+    
 
 }
