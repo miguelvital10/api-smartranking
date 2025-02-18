@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CriarJogadorDto } from './dtos/criarJogador.dto';
 import { Jogador } from './jogador/jogador.interface';
 import { InjectModel } from '@nestjs/mongoose';
@@ -11,7 +11,7 @@ export class JogadoresService {
 
     private readonly logger = new Logger(JogadoresService.name)
 
-    async criarAtualizarJogador(criaJogadorDto: CriarJogadorDto): Promise<void> {
+    async criarJogador(criaJogadorDto: CriarJogadorDto): Promise<Jogador> {
 
         const { email } = criaJogadorDto
         // const jogadorEncontrado = this.jogadores.find(jogador => jogador.email === email)
@@ -19,12 +19,25 @@ export class JogadoresService {
         const jogadorEncontrado = await this.jogadorModel.findOne({email}).exec();
 
         if (jogadorEncontrado) {
-            await this.atualizar(criaJogadorDto)
-        } else {
-            await this.criar(criaJogadorDto)
+            throw new BadRequestException(`Jogador com email ${email} já cadastrado!`)
         }
-
+        
+        const jogadorCriado = new this.jogadorModel(criaJogadorDto)
+        return await jogadorCriado.save()
     }
+
+
+    async atualizarJogador(_id: string, criaJogadorDto: CriarJogadorDto): Promise<Jogador> {
+
+        const jogadorEncontrado = await this.jogadorModel.findOne({_id}).exec();
+
+        if (!jogadorEncontrado) {
+            throw new BadRequestException(`Jogador com id ${_id} não encontrado!`)
+        }
+        
+        return await this.jogadorModel.findOneAndUpdate({_id}, {$set: criaJogadorDto}).exec()
+    }
+
 
     async consultarTodosJogadores(): Promise<Jogador[]>{
         return await this.jogadorModel.find().exec()
@@ -42,12 +55,6 @@ export class JogadoresService {
 
     async deletarJogador(email: string): Promise<any> {
         return await this.jogadorModel.deleteOne({ email }).exec()
-    }
-
-    private async criar(criaJogadorDto: CriarJogadorDto): Promise<Jogador> {
-
-        const jogadorCriado = new this.jogadorModel(criaJogadorDto)
-        return await jogadorCriado.save()
     }
 
     private async atualizar(criarJogadorDto: CriarJogadorDto): Promise<Jogador> {
