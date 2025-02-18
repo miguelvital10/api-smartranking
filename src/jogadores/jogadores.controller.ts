@@ -3,6 +3,7 @@ import { CriarJogadorDto } from './dtos/criarJogador.dto';
 import { JogadoresService } from './jogadores.service';
 import { Jogador } from './jogador/jogador.interface';
 import { JogdoresValiacaoParametrosPipe } from './pipes/jogadores-validacao-parametros.pipe';
+import { AtualizarJogadorDto } from './dtos/atualizarJogador.dto';
 
 @Controller('api/v1/jogadores')
 export class JogadoresController {
@@ -19,9 +20,9 @@ export class JogadoresController {
   @Put('/:_id')
   @UsePipes(ValidationPipe)
   async atualizarJogador(
-    @Body() criaJogadorDto: CriarJogadorDto,
+    @Body() atualizarJogador: AtualizarJogadorDto,
     @Param('_id', JogdoresValiacaoParametrosPipe) _id: string): Promise<void> {
-      await this.JogadoresService.atualizarJogador(_id, criaJogadorDto,)
+      await this.JogadoresService.atualizarJogador(_id, atualizarJogador,)
     }
 
   @Get()

@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CriarJogadorDto } from './dtos/criarJogador.dto';
+import { AtualizarJogadorDto } from './dtos/atualizarJogador.dto';
 import { Jogador } from './jogador/jogador.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -11,9 +12,9 @@ export class JogadoresService {
 
     private readonly logger = new Logger(JogadoresService.name)
 
-    async criarJogador(criaJogadorDto: CriarJogadorDto): Promise<Jogador> {
+    async criarJogador(criarJogadorDto: CriarJogadorDto): Promise<Jogador> {
 
-        const { email } = criaJogadorDto
+        const { email } = criarJogadorDto
         // const jogadorEncontrado = this.jogadores.find(jogador => jogador.email === email)
 
         const jogadorEncontrado = await this.jogadorModel.findOne({email}).exec();
@@ -22,12 +23,12 @@ export class JogadoresService {
             throw new BadRequestException(`Jogador com email ${email} já cadastrado!`)
         }
         
-        const jogadorCriado = new this.jogadorModel(criaJogadorDto)
+        const jogadorCriado = new this.jogadorModel(criarJogadorDto)
         return await jogadorCriado.save()
     }
 
 
-    async atualizarJogador(_id: string, criaJogadorDto: CriarJogadorDto): Promise<Jogador> {
+    async atualizarJogador(_id: string, atualizarJogadorDto: AtualizarJogadorDto): Promise<Jogador> {
 
         const jogadorEncontrado = await this.jogadorModel.findOne({_id}).exec();
 
@@ -35,7 +36,7 @@ export class JogadoresService {
             throw new BadRequestException(`Jogador com id ${_id} não encontrado!`)
         }
         
-        return await this.jogadorModel.findOneAndUpdate({_id}, {$set: criaJogadorDto}).exec()
+        return await this.jogadorModel.findOneAndUpdate({_id}, {$set: atualizarJogadorDto}).exec()
     }
 
 

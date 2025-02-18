@@ -1,4 +1,4 @@
-export class AualizarJogadorDto{
+export class AtualizarJogadorDto{
 
     readonly telefoneCelular: string;
 
