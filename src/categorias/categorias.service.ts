@@ -4,11 +4,13 @@ import { Categoria } from './interfaces/categoria.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AtualizarCategoriaDto } from './dtos/atualizarCategoria.dto';
+import { JogadoresService } from 'src/jogadores/jogadores.service';
 
 @Injectable()
 export class CategoriasService {
     constructor(
         @InjectModel('Categoria') private readonly categoriaModel: Model<Categoria>,
+        private readonly jogadoresService: JogadoresService
     ){}
 
     async criarCategoria(criarCategoriaDto: CriarCategoriaDto): Promise<Categoria>{
@@ -54,12 +56,18 @@ export class CategoriasService {
          const idJogador = params['idJogador']
 
          const categoriaEncontrada = await this.categoriaModel.findOne({categoria}).exec()
+         const jogadorJaCadastradoCategoria = await this.categoriaModel.find({categoria}).where('jogadores').in(idJogador).exec()
+
+         if (jogadorJaCadastradoCategoria.length > 0) {
+            throw new BadRequestException(`O Jogador ${idJogador} já está cadastrado na Categoria ${categoria}`)
+         }
+         
+         await this.jogadoresService.consultarJogadorPeloId(idJogador)
 
          if (!categoriaEncontrada) {
             throw new NotFoundException(`Categoria ${categoria} não cadastrada!`)
         }
 
-        // const jogadorEncontrado = await JogadoresModule.findOne({categoria}).exec()
 
         categoriaEncontrada.jogadores.push(idJogador)
 
