@@ -27,5 +27,9 @@ export class CategoriasService {
         return await this.categoriaModel.find().exec()
     }
 
+    async consultarCategoriaPeloId(_id: string): Promise<Categoria>{
+        return await this.categoriaModel.findOne({_id}).exec()
+    }
+
     
 }
