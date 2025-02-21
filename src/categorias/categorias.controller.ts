@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CriarCategoriaDto } from './dtos/criarCategoria.dto';
 import { Categoria } from './interfaces/categoria.interface';
 import { CategoriasService } from './categorias.service';
@@ -11,5 +11,11 @@ export class CategoriasController {
     @UsePipes(ValidationPipe)
     async criarCategoria(@Body() criarCategoriaDto: CriarCategoriaDto): Promise<Categoria>{
         return await this.categoriaService.criarCategoria(criarCategoriaDto)
+    }
+
+
+    @Get()
+    async consultarTodasCategorias(): Promise<Categoria[]>{
+        return await this.categoriaService.consultarTodasCategorias()
     }
 }
