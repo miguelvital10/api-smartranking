@@ -49,5 +49,23 @@ export class CategoriasService {
         return await this.categoriaModel.findOneAndUpdate({categoria}, {$set: atualizarCategoria}).exec()
     }
 
+    async atribuirJogadorCategoria(params: string[]): Promise<void> {
+         const categoria = params['categoria']
+         const idJogador = params['idJogador']
+
+         const categoriaEncontrada = await this.categoriaModel.findOne({categoria}).exec()
+
+         if (!categoriaEncontrada) {
+            throw new NotFoundException(`Categoria ${categoria} não cadastrada!`)
+        }
+
+        // const jogadorEncontrado = await JogadoresModule.findOne({categoria}).exec()
+
+        categoriaEncontrada.jogadores.push(idJogador)
+
+        await this.categoriaModel.findOneAndUpdate({categoria}, {$set:categoriaEncontrada})
+
+    }
+
     
 }
