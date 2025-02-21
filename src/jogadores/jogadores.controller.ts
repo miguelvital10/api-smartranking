@@ -32,6 +32,7 @@ export class JogadoresController {
 
   @Get('/:_id')
   async consultarJogadorPeloId(
+  
     @Param('_id', JogdoresValiacaoParametrosPipe) _id: string): Promise<Jogador> {
       return await this.JogadoresService.consultarJogadorPeloId(_id)
   }
