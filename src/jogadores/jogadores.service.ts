@@ -64,12 +64,4 @@ export class JogadoresService {
 
         return await this.jogadorModel.deleteOne({ _id }).exec()
     }
-
-    private async atualizar(criarJogadorDto: CriarJogadorDto): Promise<Jogador> {
-        return await this.jogadorModel.findOneAndUpdate({email: criarJogadorDto.email}, 
-            {$set: criarJogadorDto}).exec()
-    
-    }
-    
-
 }
