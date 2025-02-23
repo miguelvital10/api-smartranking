@@ -59,7 +59,7 @@ export class CategoriasService {
          const jogadorJaCadastradoCategoria = await this.categoriaModel.find({categoria}).where('jogadores').in(idJogador).exec()
 
          if (jogadorJaCadastradoCategoria.length > 0) {
-            throw new BadRequestException(`O Jogador ${idJogador} já está cadastrado na Categoria ${categoria}`)
+            throw new BadRequestException(`O Jogador de id ${idJogador} já está cadastrado na Categoria ${categoria}!`)
          }
          
          await this.jogadoresService.consultarJogadorPeloId(idJogador)
