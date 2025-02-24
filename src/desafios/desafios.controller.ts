@@ -1,7 +1,20 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Get, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { DesafiosService } from './desafios.service';
+import { CriarDesafioDto } from './dtos/criar-desafio.dto';
+import { Desafio } from './interfaces/desafio.interface';
 
-@Controller('desafios')
+@Controller('api/v1/desafios')
 export class DesafiosController {
     constructor(private readonly desafioService: DesafiosService) {}
+
+    @Post()
+    @UsePipes(ValidationPipe)
+    async criarDesafio(@Body() criarDesafioDto: CriarDesafioDto): Promise<Desafio> {
+        return await this.desafioService.criarDesafio(criarDesafioDto)
+    }
+
+    @Get()
+    async consultarTodosDesafios(): Promise<Desafio[]> {
+        return await this.desafioService.consultarTodosDesafios()
+    }
 }
