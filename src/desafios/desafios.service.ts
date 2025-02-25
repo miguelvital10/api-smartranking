@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Desafio } from './interfaces/desafio.interface';
@@ -30,4 +30,15 @@ export class DesafiosService {
    async consultarTodosDesafios(): Promise<Desafio[]> {
         return await this.desafioModel.find().populate("jogadores").exec()
    }
+
+   async consultarDesafioPeloId(desafio: string): Promise<Desafio> {
+    
+        const desafioEncontrado = await this.desafioModel.findOne({ desafio }).populate("jogadores").exec()
+        
+        if (!desafioEncontrado) {
+            throw new NotFoundException(`Desafio ${desafio} não encontrado`)
+        }
+
+        return desafioEncontrado
+    }
 }
