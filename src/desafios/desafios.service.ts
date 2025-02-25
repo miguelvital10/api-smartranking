@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { Desafio } from './interfaces/desafio.interface';
 import { JogadoresService } from 'src/jogadores/jogadores.service';
 import { CriarDesafioDto } from './dtos/criar-desafio.dto';
+import { AtualizarDesafioDto } from './dtos/atualizar-desafio.dto';
 
 @Injectable()
 export class DesafiosService {
@@ -40,5 +41,16 @@ export class DesafiosService {
         }
 
         return desafioEncontrado
+    }
+
+    async atualizaDesafio(desafio: string, atualizarDesafioDto: AtualizarDesafioDto): Promise<Desafio> {
+        const desafioEncontrado = await this.desafioModel.findOne({ desafio }).populate("jogadores").exec()
+
+        if (!desafioEncontrado) {
+            throw new NotFoundException(`Desafio ${desafio} não encontrado!`)
+        }
+
+        return await this.desafioModel.findOneAndUpdate({ desafio }, {$set: atualizarDesafioDto}).exec()
+
     }
 }
