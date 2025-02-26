@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Desafio } from './interfaces/desafio.interface';
@@ -13,15 +13,21 @@ export class DesafiosService {
     private readonly jogadoresService: JogadoresService
    ){}
 
+   private readonly (categoriasService: CategoriasService) {}
+   
+   private readonly logger = new Logger(DesafiosService.name)
+
    async criarDesafio(criarDesafioDto: CriarDesafioDto): Promise<Desafio> {
 
-    const { desafio } = criarDesafioDto
-    
-    const desafioEncontrado = await this.desafioModel.findOne({desafio}).exec()
+    const jogadores = await this.jogadoresService.consultarTodosJogadores()
 
-    if (desafioEncontrado) {
-        throw new BadRequestException(`Desafio ${desafio} já existe!`)
-    }
+    criarDesafioDto.jogadores.map(jogadorDto => {
+        const jogadorFilter = jogadores.filter( jogador => jogador._id == jogadorDto._id)
+
+        if (jogadorFilter.length == 0) {
+            throw new NotFoundException(`O id ${jogadorDto._id} não foi encontrado!`)
+        }
+    })
 
     const desafioCriado = new this.desafioModel(criarDesafioDto)
 

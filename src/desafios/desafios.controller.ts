@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
 import { DesafiosService } from './desafios.service';
 import { CriarDesafioDto } from './dtos/criar-desafio.dto';
 import { Desafio } from './interfaces/desafio.interface';
@@ -8,9 +8,12 @@ import { AtualizarDesafioDto } from './dtos/atualizar-desafio.dto';
 export class DesafiosController {
     constructor(private readonly desafioService: DesafiosService) {}
 
+    private readonly logger = new Logger(DesafiosController.name)
+
     @Post()
     @UsePipes(ValidationPipe)
     async criarDesafio(@Body() criarDesafioDto: CriarDesafioDto): Promise<Desafio> {
+        this.logger.log(`criarDesafioDto: ${JSON.stringify(criarDesafioDto)}`)
         return await this.desafioService.criarDesafio(criarDesafioDto)
     }
 
