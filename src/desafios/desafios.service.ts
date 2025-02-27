@@ -69,7 +69,7 @@ export class DesafiosService {
         if (jogadorFilter.length == 0) {
             throw new BadRequestException(`O id ${_id} não é um jogador!`)
         }
-
+ 
         return await this.desafioModel.find()
         .where('jogadores')
         .in(_id)
@@ -99,5 +99,15 @@ export class DesafiosService {
 
         return await this.desafioModel.findOneAndUpdate({ desafio }, {$set: atualizarDesafioDto}).exec()
 
+    }
+
+    async deletarDesafio(_id: string): Promise<void> {
+        const desafioEncontrado = await this.desafioModel.findOne({ _id }).exec()
+
+        if (!desafioEncontrado) {
+            throw new NotFoundException(`Desafio ${_id} não encontrado!`)
+        }
+
+         await this.desafioModel.deleteOne({ _id })
     }
 }
