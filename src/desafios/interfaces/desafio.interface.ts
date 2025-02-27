@@ -1,5 +1,6 @@
 import { Document } from "mongoose";
 import { Jogador } from "src/jogadores/jogador/jogador.interface";
+import { DesafioStatus } from "./desafio-status.enum";
 
 
 export interface Desafio extends Document{

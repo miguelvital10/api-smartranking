@@ -1,11 +1,12 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Desafio } from './interfaces/desafio.interface';
+import { Desafio, Partida } from './interfaces/desafio.interface';
 import { JogadoresService } from 'src/jogadores/jogadores.service';
 import { CategoriasService } from 'src/categorias/categorias.service';
 import { CriarDesafioDto } from './dtos/criar-desafio.dto';
 import { AtualizarDesafioDto } from './dtos/atualizar-desafio.dto';
+import { DesafioStatus } from './interfaces/desafio-status.enum';
 
 @Injectable()
 export class DesafiosService {
@@ -53,7 +54,29 @@ export class DesafiosService {
    }
 
    async consultarTodosDesafios(): Promise<Desafio[]> {
-        return await this.desafioModel.find().populate("jogadores").exec()
+    return await this.desafioModel.find()
+    .populate("solicitante")
+    .populate("jogadores")
+    .populate("partidas")
+    .exec()
+   }
+
+   async consultarDesafiosDeUmJogador(_id: any): Promise<Desafio[]> {
+        const jogadores = await this.jogadoresService.consultarTodosJogadores()
+
+        const jogadorFilter = jogadores.filter( jogador => jogador._id == _id)
+
+        if (jogadorFilter.length == 0) {
+            throw new BadRequestException(`O id ${_id} não é um jogador!`)
+        }
+
+        return await this.desafioModel.find()
+        .where('jogadores')
+        .in(_id)
+        .populate('soliciante')
+        .populate('jogadores')
+        .populate('partida')
+        .exec()
    }
 
    async consultarDesafioPeloId(desafio: string): Promise<Desafio> {
