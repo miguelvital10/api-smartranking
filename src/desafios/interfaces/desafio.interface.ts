@@ -3,8 +3,23 @@ import { Jogador } from "src/jogadores/jogador/jogador.interface";
 
 
 export interface Desafio extends Document{
-    readonly desafio: string,
-    data: Date,
+    dataHoraDesafio: Date,
+    status: DesafioStatus
+    dataHoraSolicitacao: Date,
+    dataHoraResposta: Date,
+    solicitante: Jogador,
+    categoria: string,
     jogadores: Array<Jogador>,
-    resultado: Array<string>,
+    partida: Partida
+}
+
+export interface Partida extends Document{
+    categoria: string,
+    jogadores: Array<Jogador>,
+    def: Jogador,
+    resultado: Array<Resultado>
+}
+
+export interface Resultado{
+    set: string
 }
