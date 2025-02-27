@@ -11,12 +11,11 @@ import { AtualizarDesafioDto } from './dtos/atualizar-desafio.dto';
 export class DesafiosService {
    constructor(
     @InjectModel('Desafio') private readonly desafioModel: Model<Desafio>,
+    @InjectModel('Partida') private readonly partidaModel: Model<Partida>,
     private readonly jogadoresService: JogadoresService,
-    private readonly categoriasService: CategoriasService 
-   ){}
+    private readonly categoriasService: CategoriasService){}
 
-   
-   private readonly logger = new Logger(DesafiosService.name)
+    private readonly logger = new Logger(DesafiosService.name)
 
    async criarDesafio(criarDesafioDto: CriarDesafioDto): Promise<Desafio> {
 
@@ -36,15 +35,21 @@ export class DesafiosService {
         throw new BadRequestException(`O Solicitante ${criarDesafioDto.solicitante} não é um jogador da partida!`)
     }
 
-    const categoriaDoJogador = await this.categoriasService.consultarCategoriaDoJogador()
+    const categoriaDoJogador = await this.categoriasService.consultarCategoriaDoJogador(criarDesafioDto.solicitante)
 
-
-
-
+    if (!categoriaDoJogador) {
+        throw new BadRequestException('O solicitante precisa estar vinculado a uma categoria')
+    }
 
     const desafioCriado = new this.desafioModel(criarDesafioDto)
+    desafioCriado.categoria = categoriaDoJogador.categoria
+    desafioCriado.dataHoraSolicitacao = new Date()
+
+    desafioCriado.status = DesafioStatus.PENDENTE
+    this.logger.log(`desafioCriado: ${JSON.stringify(desafioCriado)}`)
 
     return await desafioCriado.save()
+    
    }
 
    async consultarTodosDesafios(): Promise<Desafio[]> {
