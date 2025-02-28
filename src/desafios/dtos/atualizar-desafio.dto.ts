@@ -1,13 +1,12 @@
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsDateString } from "class-validator";
-import { Jogador } from "src/jogadores/jogador/jogador.interface";
+import { IsDateString, IsOptional } from "class-validator";
+import { DesafioStatus } from "../interfaces/desafio-status.enum";
 
 export class AtualizarDesafioDto{
     
+        @IsOptional()
         @IsDateString()
-        data: Date;
+        dataHoraDesafio: Date;
     
-        @IsArray()
-        @ArrayMinSize(2)
-        @ArrayMaxSize(4)
-        jogadores: Array<Jogador>
+        @IsOptional()
+        status: DesafioStatus;
 }

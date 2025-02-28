@@ -1,7 +1,7 @@
 import { BadRequestException, PipeTransform } from "@nestjs/common";
 import { DesafioStatus } from "../interfaces/desafio-status.enum";
 
-export class ValidationPipeDesafios implements PipeTransform{
+export class DesafioStatusValidacaoPipe implements PipeTransform{
     readonly statusPermitidos = [
         DesafioStatus.ACEITO,
         DesafioStatus.NEGADO,

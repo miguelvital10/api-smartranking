@@ -8,8 +8,8 @@ import { DesafiosModule } from './desafios/desafios.module';
   imports: [
     MongooseModule.forRoot('mongodb+srv://admin:aZoazPdqYzgCVyjC@cluster0.d8wok.mongodb.net/smartranking?retryWrites=true&w=majority'),
     JogadoresModule,
-    CategoriasModule,
-    DesafiosModule],
+    DesafiosModule,
+    CategoriasModule],
   controllers: [],
   providers: [],
 })

@@ -5,11 +5,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { DesafioSchema } from './interfaces/desafio.schema';
 import { JogadoresModule } from 'src/jogadores/jogadores.module';
 import { PartidaSchema } from './interfaces/partida.schema';
+import { CategoriasModule } from 'src/categorias/categorias.module';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: 'Desafio', schema: DesafioSchema}]),
+  imports: [MongooseModule.forFeature([{ name: 'Desafio', schema: DesafioSchema}, {name: 'Partida', schema: PartidaSchema}]),
   JogadoresModule,
-  MongooseModule.forFeature([{ name: 'Partida', schema: PartidaSchema}])
+  CategoriasModule,
 ],
   controllers: [DesafiosController],
   providers: [DesafiosService]
